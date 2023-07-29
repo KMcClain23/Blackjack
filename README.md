@@ -9,12 +9,8 @@
 
 ## Demo
 
-![](https://github.com/KMcClain23/blackjack/blob/main/Demo.gif)
-=======
-## Demo 
+![](https://github.com/KMcClain23/blackjack_game/blob/main/Demo.gif)
 
-![]()
->>>>>>> 66cbd4a98771f5ea847f1ec7a9da7b3be9c2df89
 
 ## Documentation
 
