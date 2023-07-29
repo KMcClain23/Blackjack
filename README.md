@@ -1,34 +1,15 @@
-<<<<<<< HEAD
 
-![Logo](https://github.com/KMcClain23/blackjack/blob/main/logo.png)
+![Logo](https://github.com/KMcClain23/blackjack_game/blob/main/logo.png)
 
-=======
-![Logo](https://github.com/KMcClain23/blackjack/blob/main/logo.png)
-<div align=”center”> 
->>>>>>> 66cbd4a98771f5ea847f1ec7a9da7b3be9c2df89
 
 # Black Jack
 ### Where you have no hopes of winning. j/k
 
 
 
-<<<<<<< HEAD
 ## Demo
 
-![](https://github.com/KMcClain23/blackjack/blob/main/Demo.gif)
-=======
-## Demo 
-
-![]()
->>>>>>> 66cbd4a98771f5ea847f1ec7a9da7b3be9c2df89
-
-## Documentation
-
-Kevin was the driver of the project throwing out ideas left and right, wrong and right. :)
-
-Christian provided card design and initial start to project with helpful feedback throughout.
-
-Moataz corrected errors as they came up and was a key part in keeping structure and which variables should go where.
+![](https://github.com/KMcClain23/blackjack_game/blob/main/Demo.gif)
 
 
 ## Used By
@@ -50,7 +31,3 @@ This project is used by the following:
 
 For support, email bstanton@codingtemple.com.
 
-<<<<<<< HEAD
-=======
-</div>
->>>>>>> 66cbd4a98771f5ea847f1ec7a9da7b3be9c2df89
