@@ -1,219 +1,383 @@
-import random
-import os
+import os 
 
-def clear_output():
-    os.system("cls" if os.name == "nt" else "clear")
+from random import choice
 
-# ----------------------------------------------------------
-# Create a deck of 52 cards 
-# Shuffle the deck
-# Ask the Player for their bet
-# Make sure that the Player's bet does not exceed their available chips
-# Deal two cards to the Dealer and two cards to the Player
-# Show only one of the Dealer's cards, the other remains hidden
-# Show both of the Player's cards
-# Ask the Player if they wish to Hit, and take another card
-# If the Player's hand doesn't Bust (go over 21) , ask if they'd like to Hit again
-# If a Player Stands, play the Dealer's hand. The dealer will always Hit until the Dealer's value meets or exceeds 17
-# Determine the winner and adjust the Player's chips accordingly
-# Ask the Player if they'd like to play again
-# ----------------------------------------------------------
-# determine suits or just numbers?
+from time import sleep
 
-# Create a card Class    
 
-suits = ("♥", "♦", "♣", "♠")
-card_values = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'K': 10, 'Q': 10, 'A': 11}
 
-class Card:
-    def __init__(self, suit, card_title):
-        self.suit = suit
-        self.card_title = card_title
-        self.card_value = card_values[card_title]
+#rules of hangman : 
 
-    def __repr__(self):
-        return f"<{self.card_title} of {self.suit}"
+# max wrong guesses  = 6 
 
-    
-    def show_rows(self):
-        return [
-            '┌───────┐',
-            f'| {self.card_title:<2}    |',
-            '|       |',
-            f'|   {self.suit}   |',
-            '|       |',
-            f'|    {self.card_title:>2} |',
-            '└───────┘'
-        ]
-    
-    def hidden_rows():
-        return [
-            '┌───────┐',
-            '|░░░░░░░|',
-            '|░░░░░░░|',
-            '|░░░░░░░|',
-            '|░░░░░░░|',
-            '|░░░░░░░|',
-            '└───────┘'
-        ]
+# track the guessed letters so they cant double guess
 
-class Game:
+# word bank : random choice 
+
+
+
+#words letters guessing
+
+
+
+#right or wrong letters
+
+
+
+#full letters
+
+
+
+# _ _ _ a _ <- something like this at some point
+
+class Hangman():
+
+    MAX_MOVES = 6
+
+    WORD_BANK = ("abruptly", "honest", "cheesecake", "hornet",
+
+                 "hockey", "quarter", "couch", "potato", "infinite", "crinkle", "celebrate")
+
+
+
+    GALLOW_STAGES = [
+
+        """
+
+        +---+
+
+        |   |
+
+            |
+
+            |
+
+            |
+
+            |
+
+        ============
+
+        """,
+
+        """
+
+        +---+
+
+        |   |
+
+        O   |
+
+            |
+
+            |
+
+            |
+
+        ============
+
+        """,
+
+        """
+
+        +---+
+
+        |   |
+
+        O   |
+
+        |   |
+
+            |
+
+            |
+
+        ============
+
+        """,
+
+        """
+
+        +---+
+
+        |   |
+
+        O   |
+
+       /|   |
+
+            |
+
+            |
+
+        ============
+
+        """,
+
+        """
+
+        +---+
+
+        |   |
+
+        O   |
+
+       /|\  |
+
+            |
+
+            |
+
+        ============
+
+        """,
+
+        """
+
+        +---+
+
+        |   |
+
+        O   |
+
+       /|\  |
+
+       /    |
+
+            |
+
+        ============
+
+        """,
+
+        """
+
+        +---+
+
+        |   |
+
+        O   |
+
+       /|\  |
+
+       / \  |
+
+            |
+
+        ============
+
+        """
+
+    ]
+
+
+
     def __init__(self):
-        self.deck = []
-        self.show_dealer_card = False
-        self.dealer = Player('bobert')
-        self.player = Player('kevin')
 
-    def shuffle(self):
-        self.deck = [Card(suit, card_value) for suit in suits for card_value in card_values]
-        random.shuffle(self.deck)
+        self.word = choice(Hangman.WORD_BANK)
 
-    def deal(self):
-        for i in range(2):
-            dealt_card = self.deck.pop()
-            self.player.hand.append(dealt_card)
-            self.player.value += dealt_card.card_value
-            if dealt_card.card_title == 'A':
-                self.player.aces += 1
+        self.guessed_letters = []
 
-            dealt_card = self.deck.pop()
-            self.dealer.hand.append(dealt_card)
-            self.dealer.value += dealt_card.card_value
-            if dealt_card.card_title == 'A':
-                self.dealer.aces += 1
+        self.incorrect_guesses = []
 
-# If the hand contains an ace, subtract 10 if the total is > 21
+        self.num_of_moves = 0
 
-    def adjust_for_ace(self, player):
-        while player.value > 21 and player.aces:
-            player.value -= 10
-            player.aces -= 1
+    
 
-    def hit(self, player):
-        card = self.deck.pop()
-        player.hand.append(card)
-        player.value += card.card_value
-        if card.card_title == 'A':
-            player.aces += 1
-        self.adjust_for_ace(player)
+    
 
-    def stand(self):
-        while self.dealer.value < 17:
-            self.hit(self.dealer)
+    def show_word(self):
 
-    def display(self):
-    # Player's hand
-        print("Player has:")
-        rows = [''] * 7
-        for card in self.player.hand:
-            card_display = card.show_rows()
-            for i in range(7):
-                rows[i] += card_display[i]
+        os.system("cls" if os.name == "nt" else "clear")
 
-        for row in rows:
-            print(row)
-        print(f"Total value: {self.player.value}\n")
+        board = ["_ " if letter not in self.guessed_letters else letter for letter in self.word]
 
-        # Dealer's hand
-        print("Dealer has:")
-        rows = [''] * 7
-        for i, card in enumerate(self.dealer.hand):
-            if i == 1 and not self.show_dealer_card:  # Hide the dealer's second card
-                card_display = Card.hidden_rows()
-            else:
-                card_display = card.show_rows()
+        for letter in board:
 
-            for i in range(7):
-                rows[i] += card_display[i]
+            print(letter, end=" ")
 
-        for row in rows:
-            print(row)
-        if self.show_dealer_card:
-            print(f"Total value: {self.dealer.value}\n")
+        print()
+
+        print("\nGuessed letters : ", end=" ")
+
+        if self.guessed_letters:
+
+            for letter in self.guessed_letters:
+
+                print(letter, end=" ")
+
         else:
-            print(f"Total value: ??\n")
 
-# find value of each player's 2 cards
-# If dealer hand <= 17 must hit
-# if player < 21 provide hit, stand options
-# check if player OR dealer = 21, blackjack winner
-# check if player OR dealer > 21, game over
-# if hit, append value of new card to hand
-# if stand, pass until dealer over 17
-# compare sum of card value - highest not over 21 wins
-# input would you like to play again?
+            print("\nYou haven't guessed any letters!")
+
+        print()
+
+        print(f"You have {Hangman.MAX_MOVES - self.num_of_moves} move(s) left!")
+
+
+
+        if self.incorrect_guesses:
+
+            stage = min(self.num_of_moves, len(Hangman.GALLOW_STAGES) - 1)
+
+            print(Hangman.GALLOW_STAGES[stage])       
+
+
+
+    def guess_letter(self, letter):
+
+        if len(letter) > 1:
+
+            print("You can't do that, one letter at a time")
+
+            return
+
+
+
+        if letter in self.word:
+
+            count = self.word.count(letter)
+
+            print(f'You found {count} {letter}{"s" if count > 1 else ""}')
+
+        else:
+
+            print(f'{letter} not in the word')
+
+            self.num_of_moves += 1
+
+            self.incorrect_guesses.append(letter)
+
+
+
+        self.guessed_letters.append(letter)
+
+
+
+    def check_all_letters_guessed(self):
+
+        for letters in self.word:
+
+            if letters not in self.guessed_letters:
+
+                return False
+
+        return True
+
     
-    def play_again(self):
+
+    def guess_word(self,word):
+
+        if word == self.word:
+
+            return True
+
+        return False
+
+    
+
+    def check_moves_left(self):
+
+        if self.num_of_moves < Hangman.MAX_MOVES:
+
+            return True
+
+        return False
+
+    
+
+    def user_won(self):
+
+        print(f"Congrats! You got the word with {Hangman.MAX_MOVES - self.num_of_moves} move(s) left! You ROCK!")
+
+
+
+    def user_lost(self):
+
+        print(f"\nWOW, that hurt to watch.\n\nThe word was {self.word}")
+
+
+
+class UI():
+
+    hangman = Hangman()
+
+
+
+    @classmethod
+
+    def main(cls):
+
+        # we can tell them the rules of our game if they havent played (mario vibes)
+
+        os.system("cls" if os.name == "nt" else "clear")
+
+        action = input("Have you played hangman before? If not or if its been a while say no/n!\n\nIf you're ready to play, press Enter to get started!").lower()
+
+        if action == "no" or action == 'n':
+
+            os.system("cls" if os.name == "nt" else "clear")
+
+            print("Here's how to play:\n1. You (the guesser) tries to guess the letters of the secret word one letter at a time. \n2. For every wrong guess, a part of the hangman is drawn. \n3. Keep guessing letters until you either guess the whole word correctly or the hangman drawing is completed. \n\nThe game ends when you guess the word correctly or when the hangman is fully drawn (which means you lost). \nTry to guess the word before the hangman gets fully drawn!\n\nThis message will self destruct in...")
+
+            sleep(20)
+
+        else:
+
+            pass
+
         while True:
-            response = input("Would you like to play again? (y/n): ").lower()
-            if response == 'y':
-                clear_output()
-                self.reset()
-                self.shuffle()
-                self.deal()
-                self.display()
-                self.action()
+
+            #show them the word like this : _ _ _ _ _
+
+            cls.hangman.show_word()
+
+            # ask them for thier letter to guess!
+
+            letter = input("What letter do you want to guess? ").lower()
+
+            # see if the letter was right
+
+            cls.hangman.guess_letter(letter)
+
+            # we need to let them know if they got any correct
+
+            cls.hangman.show_word()
+
+            # make sure they havent solved the whole word yet
+
+            if cls.hangman.check_all_letters_guessed():
+
+                cls.hangman.user_won()
+
                 break
-            elif response == 'n':
-                print("Thanks for playing! Goodbye!")
-                break
-            else:
-                print("Invalid input. Please enter 'y' or 'n'.")
-    
-    def reset(self):
-        clear_output()
-        self.player = Player('Moataz')
-        self.dealer = Player('Bobert')
-        self.show_dealer_card = False
-    
-    
-    clear_output()
-    def action(self):
-        print(f"\nHey welcome to the BlackJack table!\n")
-        while True:
-            response = input("Would you like to hit? Choose 'y' or 'n' ").lower()
-            if response == 'y':
-                self.hit(self.player)
-                clear_output()
-                self.display()
-                if self.player.value > 21:
-                    print("Bust! You lose!")
-                    self.play_again()
+
+            # we want to ask if they want to guess the whole word
+
+            action = input("Would you like to guess the whole word? yes/y or no/n ").lower()
+
+            if action == "yes" or action == 'y':
+
+            # if they gave us a word we wanna check it
+
+                word = input("What is your word? ")
+
+                if cls.hangman.guess_word(word):
+
+            # if they guess the word, give em a congrats and go again
+
+                    cls.hangman.user_won()
+
                     break
-            elif response == 'n':
-                self.show_dealer_card = True
-                self.stand()
-                clear_output()
-                self.display()
 
-                if self.dealer.value > 21 or self.player.value > self.dealer.value:
-                    print("You win!")
-                elif self.dealer.value == self.player.value:
-                    print("You lose!")
-                else:
-                    print("You lose!")
+            # see how many moves they have made, >= 6 and they are donezo 
 
-                self.play_again()
+            if not cls.hangman.check_moves_left():
+
+                cls.hangman.user_lost()
+
                 break
-            else:
-                print(f"'{response.title()}' is not one of the available options. Please select 'hit' or 'stand'.")
 
-# Create a deck
-# Create 'shuffle' which would be a random from import
-# Create a hand for dealer and for player
-# Betting option, $$ or chips, (I like chips if we can)
-# Take a bet
-# Hit, stand, bust
 
-class Player:
-    def __init__(self, name):
-        self.name = name
-        self.hand = []
-        self.value = 0
-        self.aces = 0
 
-game = Game()
-game.shuffle()
-game.deal()
-game.display()
-game.action()
+UI.main()
